@@ -1,7 +1,7 @@
 # Description: This file is used to generate embeddings using the sentence-transformers library.
 from langchain.document_loaders.csv_loader import CSVLoader
-from langchain.embeddings import HuggingFaceEmbeddings
-from langchain.vectorstores import FAISS
+from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_community.vectorstores import FAISS
 
 class EmbeddingGenerator:
     def __init__(self, model_name="sentence-transformers/all-mpnet-base-v2", model_kwargs=None):

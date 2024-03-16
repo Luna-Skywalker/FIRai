@@ -1,6 +1,6 @@
 # Description: This file is the main file for the FastAPI server. It loads the FAISS index and initializes the FastAPI server for FIR analysis.
-from langchain.embeddings import HuggingFaceEmbeddings
-from langchain.vectorstores import FAISS
+from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_community.vectorstores import FAISS
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
@@ -12,7 +12,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 # Load embeddings database
 embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2", model_kwargs={"device": "cpu"}, encode_kwargs={'normalize_embeddings': False})
-db = FAISS.load_local(folder_path="./FIRfaiss_db",embeddings=embeddings, index_name="myFIRIndex")
+db = FAISS.load_local(folder_path="./FIRfaiss_db",embeddings=embeddings, index_name="myFIRIndex", allow_dangerous_deserialization=True)
 
 app = FastAPI()
 app.add_middleware(
@@ -36,3 +36,4 @@ if __name__ == "__main__":
     
     uvicorn.run(app, host="0.0.0.0", port=8000)
     #uvicorn FIR_IPC:app --reload
+    #pip list --format=freeze > requirements.txt
