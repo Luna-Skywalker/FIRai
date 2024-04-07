@@ -5,4 +5,5 @@ In case installing requirements from "U_requirements.txt" doesn't work, install 
 `pip install transformers langchain sentence-transformers`\
 `pip install faiss-cpu`\
 `pip install fastapi`\
-`pip install "uvicorn[standard]"`
+`pip install "uvicorn[standard]"`\
+`pip install googletrans==4.0.0rc1`
