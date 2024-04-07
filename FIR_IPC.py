@@ -2,10 +2,12 @@
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 from fastapi import FastAPI, HTTPException
+from googletrans import Translator
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 
 # generator = EmbeddingGenerator()
 # generator.generate_embeddings('./Datasets/testing1.csv', './FIRfaiss_db', 'myFIRIndex')
@@ -23,9 +25,26 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+class Data(BaseModel):
+    text: str
+
+def translate_to_en(text):
+    lang = 'en'
+    translator = Translator()
+
+    lang = translator.detect(text).lang
+    # print(lang)
+
+    english_translated_text = translator.translate(text, src=lang, dest= 'en')
+    # print(english_translated_text)
+
+    # print(f"English Translation: {english_translated_text.text}")
+    return english_translated_text.text
+
 # Define FastAPI endpoints
 @app.post("/FIR")
-async def predict(text: str):
+async def predict(data:Data):
+    text = translate_to_en(data.text)
     similar_response = db.similarity_search(text, k=6)
     page_contents_array = [doc.page_content for doc in similar_response]
     sections = [s[-8:].replace('_', ' ').strip() for s in page_contents_array]
